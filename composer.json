@@ -1,0 +1,26 @@
+{
+    "name": "crell/*",
+    "require": {
+        "php": "~8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "phpbench/phpbench": "^1.1",
+        "phpstan/phpstan": "^1.0",
+        "vishnubob/wait-for-it": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crell\\Foo\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Crell\\Foo\\": "tests",
+            "Crell\\Foo\\Benchmarks\\": "benchmarks"
+        }
+    },
+    "scripts": {
+        "benchmarks": "vendor/bin/phpbench run benchmarks --report=aggregate"
+    }
+}
