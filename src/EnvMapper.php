@@ -12,15 +12,22 @@ class EnvMapper
     private array $constructorParameterList = [];
 
     /**
-     *
+     * Maps environment variables to the specified class.
      *
      * @param class-string $class
-     * @param array<string, mixed>|null $envArray
+     *   The class to which to map values.
+     * @param bool $strict
+     *   If true, any unmatched properties will result in an exception.  If false, unmatched properties
+     *   will be ignored, which in most cases means they will be uninitialized.
+     * @param array<string, mixed>|null $source
+     *   The array to map from.  If not specified, $_ENV will be used. Note that because the
+     *   primary use case is environment variables, the input array MUST have keys that are UPPER_CASE
+     *   strings.
      * @return object
      */
-    public function map(string $class, ?array $envArray = null): object
+    public function map(string $class, bool $strict = false, ?array $source = null): object
     {
-        $envArray ??= $_ENV;
+        $source ??= $_ENV;
 
         $rClass = new \ReflectionClass($class);
 
@@ -30,10 +37,12 @@ class EnvMapper
         foreach ($rProperties as $rProp) {
             $propName = $rProp->getName();
             $envName = $this->normalizeName($propName);
-            if (isset($envArray[$envName])) {
-                $toSet[$propName] = $this->typeNormalize($envArray[$envName]);
+            if (isset($source[$envName])) {
+                $toSet[$propName] = $this->typeNormalize($source[$envName]);
             } elseif ($defaultValue = $this->getDefaultValueFromConstructor($rProp)) {
                 $toSet[$propName] = $defaultValue;
+            } elseif ($strict) {
+                throw MissingEnvValue::create($propName, $class);
             }
         }
 

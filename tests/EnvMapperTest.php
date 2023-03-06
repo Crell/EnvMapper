@@ -18,7 +18,7 @@ class EnvMapperTest extends TestCase
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(SampleEnvironment::class, $_ENV);
+        $env = $mapper->map(SampleEnvironment::class, source: $_ENV);
 
         self::assertNotNull($env->phpVersion);
         self::assertNotNull($env->xdebug_mode);
@@ -28,14 +28,26 @@ class EnvMapperTest extends TestCase
     }
 
     #[Test]
-    public function undefined_vars_stay_undefined(): void
+    public function undefined_vars_stay_undefined_if_not_strict(): void
     {
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(EnvWithMissingValue::class, $_ENV);
+        $env = $mapper->map(EnvWithMissingValue::class, source: $_ENV);
 
         self::assertFalse((new \ReflectionClass($env))->getProperty('missing')->isInitialized($env));
+    }
+
+    #[Test]
+    public function undefined_vars_throws_if_strict(): void
+    {
+        $this->expectException(MissingEnvValue::class);
+        $this->expectExceptionMessage('No matching environment variable found for property "missing" of class Crell\EnvMapper\Envs\EnvWithMissingValue.');
+
+        $mapper = new EnvMapper();
+
+        /** @var SampleEnvironment $env */
+        $env = $mapper->map(EnvWithMissingValue::class, strict: true, source: $_ENV);
     }
 
     #[Test]
@@ -49,7 +61,7 @@ class EnvMapperTest extends TestCase
         print "About to map.\n";
 
         /** @var EnvWithTypeMismatch $env */
-        $env = $mapper->map(EnvWithTypeMismatch::class, $_ENV);
+        $env = $mapper->map(EnvWithTypeMismatch::class, source: $_ENV);
         self::assertNotNull($env->path);
 
         print "Mapped.\n";
