@@ -16,7 +16,7 @@ class EnvMapper
      *
      * @param class-string $class
      *   The class to which to map values.
-     * @param bool $strict
+     * @param bool $requireValues
      *   If true, any unmatched properties will result in an exception.  If false, unmatched properties
      *   will be ignored, which in most cases means they will be uninitialized.
      * @param array<string, mixed>|null $source
@@ -25,7 +25,7 @@ class EnvMapper
      *   strings.
      * @return object
      */
-    public function map(string $class, bool $strict = false, ?array $source = null): object
+    public function map(string $class, bool $requireValues = false, ?array $source = null): object
     {
         $source ??= $_ENV;
 
@@ -41,7 +41,7 @@ class EnvMapper
                 $toSet[$propName] = $this->typeNormalize($source[$envName]);
             } elseif ($defaultValue = $this->getDefaultValueFromConstructor($rProp)) {
                 $toSet[$propName] = $defaultValue;
-            } elseif ($strict) {
+            } elseif ($requireValues) {
                 throw MissingEnvValue::create($propName, $class);
             }
         }

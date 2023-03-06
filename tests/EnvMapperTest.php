@@ -57,7 +57,7 @@ class EnvMapperTest extends TestCase
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(EnvWithMissingValue::class, strict: true, source: $this->source);
+        $env = $mapper->map(EnvWithMissingValue::class, requireValues: true, source: $this->source);
     }
 
     #[Test]

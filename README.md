@@ -57,7 +57,7 @@ value will be used.  (Default values on non-promoted properties are not checked,
 `readonly` properties, and readonly properties cannot have default values.)  If there is no default value, it will be
 left uninitialized.
 
-Alternatively, you may set `strict: true` in the `map()` call.  If `strict` is set, then a missing property will instead
+Alternatively, you may set `requireValues: true` in the `map()` call.  If `requireValues` is set, then a missing property will instead
 throw a `MissingEnvValue` exception.
 
 ```php
@@ -69,7 +69,7 @@ class MissingStuff
 }
 
 // This will throw a MissingEnvValue exception unless there is a NOT_SET env var defined.
-$mapper->map(MissingStuff::class, strict: true);
+$mapper->map(MissingStuff::class, requireValues: true);
 ```
 
 ### Type enforcement
