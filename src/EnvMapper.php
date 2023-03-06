@@ -47,7 +47,6 @@ class EnvMapper
         }
 
         $populator = function (array $props) {
-            var_dump($props);
             foreach ($props as $k => $v) {
                 try {
                     $this->$k = $v;
