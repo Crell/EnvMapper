@@ -1,6 +1,20 @@
 {
     "name": "crell/envmapper",
     "description": "A simple, fast mapper from environment variables to classed objects.",
+    "keywords": [
+        "Environment",
+        "Map"
+    ],
+    "homepage": "https://github.com/Crell/EnvMapper",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Larry Garfield",
+            "email": "larry@garfieldtech.com",
+            "homepage": "http://www.garfieldtech.com/",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "~8.1"
     },
