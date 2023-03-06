@@ -12,18 +12,28 @@ use PHPUnit\Framework\TestCase;
 
 class EnvMapperTest extends TestCase
 {
+    /** @var array<string, string|int> */
+    protected array $source = [
+        'PHP_VERSION' => '8.1.14',
+        'XDEBUG_MODE' => 'debug',
+        'PATH' => 'a value',
+        'HOSTNAME' => 'localhost',
+        'SHLVL' => 1,
+    ];
+
     #[Test]
     public function mapping_different_types_with_defaults_parses_correctly(): void
     {
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(SampleEnvironment::class, source: $_ENV);
+        $env = $mapper->map(SampleEnvironment::class, source: $this->source);
 
         self::assertNotNull($env->phpVersion);
         self::assertNotNull($env->xdebug_mode);
         self::assertNotNull($env->PATH);
         self::assertNotNull($env->hostname);
+        self::assertNotNull($env->shlvl);
         self::assertEquals('default', $env->missing);
     }
 
@@ -33,7 +43,7 @@ class EnvMapperTest extends TestCase
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(EnvWithMissingValue::class, source: $_ENV);
+        $env = $mapper->map(EnvWithMissingValue::class, source: $this->source);
 
         self::assertFalse((new \ReflectionClass($env))->getProperty('missing')->isInitialized($env));
     }
@@ -47,7 +57,7 @@ class EnvMapperTest extends TestCase
         $mapper = new EnvMapper();
 
         /** @var SampleEnvironment $env */
-        $env = $mapper->map(EnvWithMissingValue::class, strict: true, source: $_ENV);
+        $env = $mapper->map(EnvWithMissingValue::class, strict: true, source: $this->source);
     }
 
     #[Test]
@@ -58,13 +68,8 @@ class EnvMapperTest extends TestCase
 
         $mapper = new EnvMapper();
 
-        print "About to map.\n";
-
         /** @var EnvWithTypeMismatch $env */
-        $env = $mapper->map(EnvWithTypeMismatch::class, source: $_ENV);
-        self::assertNotNull($env->path);
-
-        print "Mapped.\n";
+        $env = $mapper->map(EnvWithTypeMismatch::class, source: $this->source);
 
         $this->fail('Exception was not thrown.');
     }
