@@ -215,8 +215,8 @@ services:
 EnvMapper is designed to be lightweight and fast.  For that reason, its feature set is deliberately limited.
 
 However, there are cases you may wish to have a more complex environment setup.  For instance, you may want to
-rename properties more freely, or nest related properties inside sub-objects.  EnvMapper is not designed to handle
-that.
+rename properties more freely, nest related properties inside sub-objects, or map comma-delimited environment variables
+into an array.  EnvMapper is not designed to handle that.
 
 However, its sibling project [`Crell/Serde`](https://www.github.com/Crell/Serde) can do so easily.  Serde is a general
 purpose serialization library, but you can easily feed it `$_ENV` as an array to deserialize from into an object. That
