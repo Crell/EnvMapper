@@ -1,5 +1,23 @@
 parameters:
-	level: 6
-	paths:
-		- src
-		- tests
+    level: 9
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - tests/Envs/*
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+#        -
+#            message: '#type has no value type specified in iterable type array#'
+#            path: tests/
+#        -
+#            message: '#type has no value type specified in iterable type iterable#'
+#            path: tests/
+        # PHPStan is overly aggressive on readonly properties.
+        - '#Class (.*) has an uninitialized readonly property (.*). Assign it in the constructor.#'
+        - '#Readonly property (.*) is assigned outside of the constructor.#'
+        # This is wrong, getName() is a working method on ReflectionType. But the stubs are wrong, or something.
+        -
+            message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
+            count: 1
+            path: src/TypeMismatch.php

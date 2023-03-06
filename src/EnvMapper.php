@@ -6,8 +6,18 @@ namespace Crell\EnvMapper;
 
 class EnvMapper
 {
-    private array $propertyList = [];
+    /**
+     * @var array<class-string, array<\ReflectionParameter>>
+     */
+    private array $constructorParameterList = [];
 
+    /**
+     *
+     *
+     * @param class-string $class
+     * @param array<string, mixed>|null $envArray
+     * @return object
+     */
     public function map(string $class, ?array $envArray = null): object
     {
         $envArray ??= $_ENV;
@@ -52,12 +62,12 @@ class EnvMapper
      * push them into well-typed numeric fields we need to cast them
      * appropriately.
      *
-     * @param mixed $val
+     * @param int|float|string $val
      *   The value to normalize.
      * @return int|float|string
      *   The passed value, but now with the correct type.
      */
-    private function typeNormalize(mixed $val): int|float|string
+    private function typeNormalize(int|float|string $val): int|float|string
     {
         if (!is_numeric($val)) {
             return $val;
@@ -94,7 +104,7 @@ class EnvMapper
      */
     protected function getPropertiesForClass(\ReflectionClass $rClass): array
     {
-        return $this->propertyList[$rClass->getName()] ??= $this->makePropertiesForClass($rClass);
+        return $this->constructorParameterList[$rClass->getName()] ??= $this->makePropertiesForClass($rClass);
     }
 
     /**
@@ -121,6 +131,11 @@ class EnvMapper
             PREG_SPLIT_NO_EMPTY /* don't return empty elements */
             | PREG_SPLIT_DELIM_CAPTURE /* don't strip anything from output array */
         );
+
+        if (!$words) {
+            // I don't know how this is even possible.
+            throw new \RuntimeException('Could not normalize name: ' . $input);
+        }
 
         return \implode('_', array_map(strtoupper(...), $words));
     }
