@@ -9,6 +9,9 @@
         "phpbench/phpbench": "^1.1",
         "phpstan/phpstan": "^1.10"
     },
+    "suggest": {
+        "crell/serde": "A full and robust serialization library. It can do much more advanced manipulation when reading in env vars if EnvMapper is insufficient for your needs."
+    },
     "autoload": {
         "psr-4": {
             "Crell\\EnvMapper\\": "src"
