@@ -5,7 +5,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 
 Reading environment variables is a common part of most applications.  However, it's often done in an ad-hoc and unsafe
-way, but calling `getenv()` or reading `$_ENV` from an arbitrary place in code.  That means error handling, missing-value
+way, by calling `getenv()` or reading `$_ENV` from an arbitrary place in code.  That means error handling, missing-value
 handling, default values, etc. are scattered about the code base.
 
 This library changes that.  It allows you to map environment variables into arbitrary classed objects extremely fast,
