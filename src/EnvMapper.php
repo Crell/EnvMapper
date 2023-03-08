@@ -39,7 +39,7 @@ class EnvMapper
             $propName = $rProp->getName();
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
-                $toSet[$propName] = $this->typeNormalize($source[$envName]);
+                $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
             } elseif ($defaultValue = $this->getDefaultValueFromConstructor($rProp)) {
                 $toSet[$propName] = $defaultValue;
             } elseif ($requireValues) {
@@ -76,19 +76,23 @@ class EnvMapper
      * @return int|float|string
      *   The passed value, but now with the correct type.
      */
-    private function typeNormalize(int|float|string $val): int|float|string
+    private function typeNormalize(int|float|string $val, \ReflectionProperty $rProp): int|float|string
     {
-        if (!is_numeric($val)) {
-            return $val;
+        $rType = $rProp->getType();
+        if ($rType instanceof \ReflectionNamedType) {
+            return match ($rType->getName()) {
+                'string' => $val,
+                'float' => is_numeric($val)
+                    ? (float) $val
+                    : throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
+                'int' => (is_numeric($val) && floor((float) $val) === (float) $val)
+                    ? (int) $val
+                    : throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
+                default => throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
+            };
         }
 
-        // It's either a float or an int, but floor() wants a float.
-        $val = (float) $val;
-
-        if (floor($val) === $val) {
-            return (int) $val;
-        }
-        return $val;
+        throw new \RuntimeException('Compound types are not yet supported');
     }
 
     /**

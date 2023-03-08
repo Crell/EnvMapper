@@ -19,6 +19,7 @@ class EnvMapperTest extends TestCase
         'PATH' => 'a value',
         'HOSTNAME' => 'localhost',
         'SHLVL' => 1,
+        'ZIP_CODE' => '01234',
     ];
 
     #[Test]

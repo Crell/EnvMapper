@@ -42,6 +42,7 @@ class EnvMapperBench
         'PATH' => 'a value',
         'HOSTNAME' => 'localhost',
         'SHLVL' => 1,
+        'ZIP_CODE' => '01234',
     ];
 
     public function setUp(): void

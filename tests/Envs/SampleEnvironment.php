@@ -16,6 +16,8 @@ class SampleEnvironment
         public readonly string $hostname,
         // Verify an int can be read correctly.
         public readonly int $shlvl,
+        // This is a numeric string, but should stay a string.
+        public readonly string $zipCode,
         // This is not defined in the environment, so the default value should be used.
         public readonly string $missing = 'default',
     ) {}
