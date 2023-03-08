@@ -14,7 +14,8 @@ class EnvMapper
     /**
      * Maps environment variables to the specified class.
      *
-     * @param class-string $class
+     * @template T of object
+     * @param class-string<T> $class
      *   The class to which to map values.
      * @param bool $requireValues
      *   If true, any unmatched properties will result in an exception.  If false, unmatched properties
@@ -23,7 +24,7 @@ class EnvMapper
      *   The array to map from.  If not specified, $_ENV will be used. Note that because the
      *   primary use case is environment variables, the input array MUST have keys that are UPPER_CASE
      *   strings.
-     * @return object
+     * @return T
      */
     public function map(string $class, bool $requireValues = false, ?array $source = null): object
     {
