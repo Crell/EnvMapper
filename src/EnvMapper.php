@@ -40,8 +40,8 @@ class EnvMapper
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
                 $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
-            } elseif ($defaultValue = $this->getDefaultValueFromConstructor($rProp)) {
-                $toSet[$propName] = $defaultValue;
+            } elseif (ConstructorValue::NoneAvailable !== $default = $this->getDefaultValueFromConstructor($rProp)) {
+                $toSet[$propName] = $default;
             } elseif ($requireValues) {
                 throw MissingEnvValue::create($propName, $class);
             }
@@ -109,7 +109,7 @@ class EnvMapper
 
         return $param?->isDefaultValueAvailable()
             ? $param->getDefaultValue()
-            : null;
+            : ConstructorValue::NoneAvailable;
     }
 
     /**

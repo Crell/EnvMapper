@@ -20,5 +20,9 @@ class SampleEnvironment
         public readonly string $zipCode,
         // This is not defined in the environment, so the default value should be used.
         public readonly string $missing = 'default',
+        // These are not defined in the environment, so the default falsy values should be used.
+        public readonly bool $missingFalse = false,
+        public readonly string $missingEmptyString = '',
+        public readonly ?string $missingNull = null,
     ) {}
 }
