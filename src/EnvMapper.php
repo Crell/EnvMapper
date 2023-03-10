@@ -40,8 +40,8 @@ class EnvMapper
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
                 $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
-            } elseif ($defaultValue = $this->getDefaultValueFromConstructor($rProp)) {
-                $toSet[$propName] = $defaultValue;
+            } elseif ($this->hasDefaultValueFromConstructor($rProp)) {
+                $toSet[$propName] = $this->getDefaultValueFromConstructor($rProp);
             } elseif ($requireValues) {
                 throw MissingEnvValue::create($propName, $class);
             }
@@ -93,6 +93,21 @@ class EnvMapper
         }
 
         throw new \RuntimeException('Compound types are not yet supported');
+    }
+
+    /**
+     * This is actually rather slow.  Reflection's performance cost hurts here.
+     *
+     * @param \ReflectionProperty $subject
+     * @return bool
+     */
+    protected function hasDefaultValueFromConstructor(\ReflectionProperty $subject): bool
+    {
+        $params = $this->getPropertiesForClass($subject->getDeclaringClass());
+
+        $param = $params[$subject->getName()] ?? null;
+
+        return (bool) $param?->isDefaultValueAvailable();
     }
 
     /**
