@@ -71,12 +71,12 @@ class EnvMapper
      * push them into well-typed numeric fields we need to cast them
      * appropriately.
      *
-     * @param int|float|string $val
+     * @param string $val
      *   The value to normalize.
-     * @return int|float|string
+     * @return int|float|string|bool
      *   The passed value, but now with the correct type.
      */
-    private function typeNormalize(int|float|string $val, \ReflectionProperty $rProp): int|float|string
+    private function typeNormalize(string $val, \ReflectionProperty $rProp): int|float|string|bool
     {
         $rType = $rProp->getType();
         if ($rType instanceof \ReflectionNamedType) {
@@ -88,6 +88,7 @@ class EnvMapper
                 'int' => (is_numeric($val) && floor((float) $val) === (float) $val)
                     ? (int) $val
                     : throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
+                'bool' => in_array(strtolower($val), [1, '1', 'true', 'yes', 'on'], false),
                 default => throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
             };
         }

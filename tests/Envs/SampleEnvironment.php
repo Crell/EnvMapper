@@ -18,6 +18,7 @@ class SampleEnvironment
         public readonly int $shlvl,
         // This is a numeric string, but should stay a string.
         public readonly string $zipCode,
+        public readonly bool $bool,
         // This is not defined in the environment, so the default value should be used.
         public readonly string $missing = 'default',
         // These are not defined in the environment, so the default falsy values should be used.

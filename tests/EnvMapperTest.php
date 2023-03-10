@@ -18,8 +18,9 @@ class EnvMapperTest extends TestCase
         'XDEBUG_MODE' => 'debug',
         'PATH' => 'a value',
         'HOSTNAME' => 'localhost',
-        'SHLVL' => 1,
+        'SHLVL' => '1',
         'ZIP_CODE' => '01234',
+        'BOOL' => '1',
     ];
 
     #[Test]

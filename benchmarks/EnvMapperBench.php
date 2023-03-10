@@ -41,8 +41,9 @@ class EnvMapperBench
         'XDEBUG_MODE' => 'debug',
         'PATH' => 'a value',
         'HOSTNAME' => 'localhost',
-        'SHLVL' => 1,
+        'SHLVL' => '1',
         'ZIP_CODE' => '01234',
+        'BOOL' => '1',
     ];
 
     public function setUp(): void

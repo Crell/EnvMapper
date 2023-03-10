@@ -78,6 +78,9 @@ Environment variables are always strings, but you may know out-of-band that they
 EnvMapper will automatically cast int-like values (like "5" or "42") to integers, and float-like values (like "3.14") to
 floats, so that they will safely assign to the typed properties on the object.
 
+If a property is typed `bool`, then the values "1", "true", "yes", and "on" (in any case) will evaluate to `true`. Anything
+else will evaluate to false.
+
 If a value cannot be assigned (for instance, if the `DB_PORT` environment variable was set to `"any"`), then a `TypeMismatch`
 exception will be thrown.
 
