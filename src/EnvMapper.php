@@ -40,8 +40,8 @@ class EnvMapper
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
                 $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
-            } elseif ($this->hasDefaultValueFromConstructor($rProp)) {
-                $toSet[$propName] = $this->getDefaultValueFromConstructor($rProp);
+            } elseif (ConstructorValue::NoneAvailable !== $default = $this->getDefaultValueFromConstructor($rProp)) {
+                $toSet[$propName] = $default;
             } elseif ($requireValues) {
                 throw MissingEnvValue::create($propName, $class);
             }
@@ -99,21 +99,6 @@ class EnvMapper
      * This is actually rather slow.  Reflection's performance cost hurts here.
      *
      * @param \ReflectionProperty $subject
-     * @return bool
-     */
-    protected function hasDefaultValueFromConstructor(\ReflectionProperty $subject): bool
-    {
-        $params = $this->getPropertiesForClass($subject->getDeclaringClass());
-
-        $param = $params[$subject->getName()] ?? null;
-
-        return (bool) $param?->isDefaultValueAvailable();
-    }
-
-    /**
-     * This is actually rather slow.  Reflection's performance cost hurts here.
-     *
-     * @param \ReflectionProperty $subject
      * @return mixed
      */
     protected function getDefaultValueFromConstructor(\ReflectionProperty $subject): mixed
@@ -124,7 +109,7 @@ class EnvMapper
 
         return $param?->isDefaultValueAvailable()
             ? $param->getDefaultValue()
-            : null;
+            : ConstructorValue::NoneAvailable;
     }
 
     /**
