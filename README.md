@@ -87,6 +87,15 @@ exception will be thrown.
 EnvMapper reads values from `$_ENV` by default.  If you are using a library that reads `.env` files into the environment,
 it should work fine with EnvMapper provided it populates `$_ENV`.  EnvMapper does not use `getenv()` as it is much slower.
 
+Note that your [variables_order](http://php.net/variables-order) in PHP needs to be set to include `E`, for Environment,
+in order for `$_ENV` to be populated.  If it is not, `$_ENV` will be empty.  If you cannot configure your server to populate
+`$_ENV`, and you cannot switch to a non-broken server, as a fallback you can pass the return of `getenv()` to the `source`
+parameter, like so:
+
+```php
+$mapper->map(Environment::class, source: getenv());
+```
+
 ## Common patterns
 
 ### Registering with a DI Container
