@@ -52,10 +52,8 @@ EnvMapper will convert the name of the property into `UPPER_CASE` style, which i
 for environment variables.  It will then look for an environment variable by that name and assign it to that property.
 That means you may use `lowerCamel` or `snake_case` for object properties.  Both will work fine.
 
-If no environment variable is found, but the property has a default value set in the class's constructor, that default
-value will be used.  (Default values on non-promoted properties are not checked, on the assumption that they will be
-`readonly` properties, and readonly properties cannot have default values.)  If there is no default value, it will be
-left uninitialized.
+If no environment variable is found, but the property has a default value set in the class definition, that default
+value will be used.  If there is no default value, it will be left uninitialized.
 
 Alternatively, you may set `requireValues: true` in the `map()` call.  If `requireValues` is set, then a missing property will instead
 throw a `MissingEnvValue` exception.
