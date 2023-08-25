@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Crell\EnvMapper;
 
-enum ConstructorValue
+enum PropValue
 {
-    case NoneAvailable;
+    case None;
 }
