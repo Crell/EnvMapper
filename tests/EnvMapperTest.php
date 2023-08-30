@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crell\EnvMapper;
 
+use Crell\EnvMapper\Envs\EnvWithDefaults;
 use Crell\EnvMapper\Envs\EnvWithMissingValue;
 use Crell\EnvMapper\Envs\EnvWithTypeMismatch;
 use Crell\EnvMapper\Envs\SampleEnvironment;
@@ -77,5 +78,17 @@ class EnvMapperTest extends TestCase
         $env = $mapper->map(EnvWithTypeMismatch::class, source: $this->source);
 
         $this->fail('Exception was not thrown.');
+    }
+
+    #[Test]
+    public function default_values_get_used(): void
+    {
+        $mapper = new EnvMapper();
+
+        $env = $mapper->map(EnvWithDefaults::class, source: $this->source);
+
+        self::assertEquals('beep', $env->propDefault);
+        self::assertEquals('boop', $env->promotedDefault);
+        self::assertEquals('narf', $env->basic);
     }
 }
