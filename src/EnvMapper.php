@@ -99,6 +99,10 @@ class EnvMapper
     /**
      * This is actually rather slow.  Reflection's performance cost hurts here.
      *
+     * We only care about defaults from the constructor; if a non-readonly property
+     * has a default value, then newInstanceWithoutConstructor() will use it for us
+     * and we don't need to do anything.
+     *
      * @param \ReflectionProperty $subject
      * @return mixed
      */
