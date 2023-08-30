@@ -104,7 +104,7 @@ class EnvMapper
      */
     protected function getDefaultValue(\ReflectionProperty $subject): mixed
     {
-        $params = $this->getPropertiesForClass($subject->getDeclaringClass());
+        $params = $this->getConstructorArgs($subject->getDeclaringClass());
 
         $param = $params[$subject->getName()] ?? null;
 
@@ -116,15 +116,15 @@ class EnvMapper
     /**
      * @return array<string, \ReflectionParameter>
      */
-    protected function getPropertiesForClass(\ReflectionClass $rClass): array
+    protected function getConstructorArgs(\ReflectionClass $rClass): array
     {
-        return $this->constructorParameterList[$rClass->getName()] ??= $this->makePropertiesForClass($rClass);
+        return $this->constructorParameterList[$rClass->getName()] ??= $this->makeConstructorArgs($rClass);
     }
 
     /**
      * @return array<string, \ReflectionParameter>
      */
-    protected function makePropertiesForClass(\ReflectionClass $rClass): array
+    protected function makeConstructorArgs(\ReflectionClass $rClass): array
     {
         $props = [];
         foreach ($rClass->getConstructor()?->getParameters() ?? [] as $rProp) {
