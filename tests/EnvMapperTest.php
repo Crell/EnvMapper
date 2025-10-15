@@ -37,6 +37,7 @@ class EnvMapperTest extends TestCase
         self::assertNotNull($env->PATH);
         self::assertNotNull($env->hostname);
         self::assertNotNull($env->shlvl);
+        self::assertSame('01234', $env->zipCode);
         self::assertEquals('default', $env->missing);
         self::assertEquals(false, $env->missingFalse);
         self::assertEquals('', $env->missingEmptyString);
