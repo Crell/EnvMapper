@@ -7,7 +7,9 @@ namespace Crell\EnvMapper;
 use Crell\EnvMapper\Envs\EnvWithDefaults;
 use Crell\EnvMapper\Envs\EnvWithMissingValue;
 use Crell\EnvMapper\Envs\EnvWithTypeMismatch;
+use Crell\EnvMapper\Envs\IntegerBackedEnum;
 use Crell\EnvMapper\Envs\SampleEnvironment;
+use Crell\EnvMapper\Envs\StringBackedEnum;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -22,6 +24,8 @@ class EnvMapperTest extends TestCase
         'SHLVL' => '1',
         'ZIP_CODE' => '01234',
         'BOOL' => '1',
+        'STRING_BACKED_ENUM' => 'FOO',
+        'INTEGER_BACKED_ENUM' => '2',
     ];
 
     #[Test]
@@ -39,6 +43,8 @@ class EnvMapperTest extends TestCase
         self::assertNotNull($env->shlvl);
         self::assertSame('01234', $env->zipCode);
         self::assertSame(true, $env->bool);
+        self::assertEquals(StringBackedEnum::Foo, $env->stringBackedEnum);
+        self::assertEquals(IntegerBackedEnum::Bar, $env->integerBackedEnum);
         self::assertEquals('default', $env->missing);
         self::assertEquals(false, $env->missingFalse);
         self::assertEquals('', $env->missingEmptyString);

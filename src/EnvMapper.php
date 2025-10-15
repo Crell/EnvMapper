@@ -76,11 +76,22 @@ class EnvMapper
      * @return int|float|string|bool
      *   The passed value, but now with the correct type.
      */
-    private function typeNormalize(string $val, \ReflectionProperty $rProp): int|float|string|bool
+    private function typeNormalize(string $val, \ReflectionProperty $rProp): int|float|string|bool|\BackedEnum
     {
         $rType = $rProp->getType();
         if ($rType instanceof \ReflectionNamedType) {
-            return match ($rType->getName()) {
+            $name = $rType->getName();
+
+            if (is_a($name, \BackedEnum::class, true)) {
+                $rEnum = new \ReflectionEnum($name);
+                $backingType = $rEnum->getBackingType();
+                assert($backingType instanceof \ReflectionNamedType);
+                $isIntBacked = $backingType->getName() === 'int';
+
+                return $name::from($isIntBacked ? (int) $val : $val);
+            }
+
+            return match ($name) {
                 'string' => $val,
                 'float' => is_numeric($val)
                     ? (float) $val
