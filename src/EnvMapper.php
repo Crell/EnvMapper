@@ -39,7 +39,9 @@ class EnvMapper
             $propName = $rProp->getName();
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
-                $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
+                /** @var string|int|float $val */
+                $val = $source[$envName];
+                $toSet[$propName] = $this->typeNormalize($val, $rProp);
             } elseif (PropValue::None !== $default = $this->getDefaultValue($rProp)) {
                 $toSet[$propName] = $default;
             } elseif ($requireValues) {
