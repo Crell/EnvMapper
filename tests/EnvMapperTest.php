@@ -36,11 +36,11 @@ class EnvMapperTest extends TestCase
         /** @var SampleEnvironment $env */
         $env = $mapper->map(SampleEnvironment::class, source: $this->source);
 
-        self::assertNotNull($env->phpVersion);
-        self::assertNotNull($env->xdebug_mode);
-        self::assertNotNull($env->PATH);
-        self::assertNotNull($env->hostname);
-        self::assertNotNull($env->shlvl);
+        self::assertEquals($this->source['PHP_VERSION'], $env->phpVersion);
+        self::assertEquals($this->source['XDEBUG_MODE'], $env->xdebug_mode);
+        self::assertEquals($this->source['PATH'], $env->PATH);
+        self::assertEquals($this->source['HOSTNAME'], $env->hostname);
+        self::assertEquals($this->source['SHLVL'], $env->shlvl);
         self::assertSame('01234', $env->zipCode);
         self::assertSame(true, $env->bool);
         self::assertEquals(StringBackedEnum::Foo, $env->stringBackedEnum);

@@ -20,7 +20,7 @@ class EnvMapper
      * @param bool $requireValues
      *   If true, any unmatched properties will result in an exception.  If false, unmatched properties
      *   will be ignored, which in most cases means they will be uninitialized.
-     * @param array<string, mixed>|null $source
+     * @param array<string, string|int|float>|null $source
      *   The array to map from.  If not specified, $_ENV will be used. Note that because the
      *   primary use case is environment variables, the input array MUST have keys that are UPPER_CASE
      *   strings.
@@ -39,7 +39,9 @@ class EnvMapper
             $propName = $rProp->getName();
             $envName = $this->normalizeName($propName);
             if (isset($source[$envName])) {
-                $toSet[$propName] = $this->typeNormalize($source[$envName], $rProp);
+                /** @var string|int|float $val */
+                $val = $source[$envName];
+                $toSet[$propName] = $this->typeNormalize($val, $rProp);
             } elseif (PropValue::None !== $default = $this->getDefaultValue($rProp)) {
                 $toSet[$propName] = $default;
             } elseif ($requireValues) {
@@ -71,12 +73,12 @@ class EnvMapper
      * push them into well-typed numeric fields we need to cast them
      * appropriately.
      *
-     * @param string $val
+     * @param string|int|float $val
      *   The value to normalize.
      * @return int|float|string|bool
      *   The passed value, but now with the correct type.
      */
-    private function typeNormalize(string $val, \ReflectionProperty $rProp): int|float|string|bool|\BackedEnum
+    private function typeNormalize(string|int|float $val, \ReflectionProperty $rProp): int|float|string|bool|\BackedEnum
     {
         $rType = $rProp->getType();
         if ($rType instanceof \ReflectionNamedType) {
@@ -90,7 +92,7 @@ class EnvMapper
                 assert($backingType instanceof \ReflectionNamedType);
                 $isIntBacked = $backingType->getName() === 'int';
 
-                return $name::from($isIntBacked ? (int) $val : $val);
+                return $name::from($isIntBacked ? (int) $val : (string) $val);
             }
 
             return match ($name) {
@@ -98,10 +100,10 @@ class EnvMapper
                 'float' => is_numeric($val)
                     ? (float) $val
                     : throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
-                'int' => (is_numeric($val) && floor((float) $val) === (float) $val)
+                'int' => (is_numeric($val) && is_int($val + 0))
                     ? (int) $val
                     : throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
-                'bool' => in_array(strtolower($val), [1, '1', 'true', 'yes', 'on'], false),
+                'bool' => in_array(strtolower((string) $val), [1, '1', 'true', 'yes', 'on'], false),
                 default => throw TypeMismatch::create($rProp->getDeclaringClass()->getName(), $rProp->getName(), $val),
             };
         }
