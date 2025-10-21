@@ -85,6 +85,8 @@ class EnvMapper
             if (is_a($name, \BackedEnum::class, true)) {
                 $rEnum = new \ReflectionEnum($name);
                 $backingType = $rEnum->getBackingType();
+                // On PHP 8.1, getBackingType() returns ReflectionType, which is not specific enough.
+                // Remove this once 8.2 is the minimum version.
                 assert($backingType instanceof \ReflectionNamedType);
                 $isIntBacked = $backingType->getName() === 'int';
 
