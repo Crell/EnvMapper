@@ -21,7 +21,7 @@
     "require-dev": {
         "phpunit/phpunit": "^10.0",
         "phpbench/phpbench": "^1.2",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^2.1"
     },
     "suggest": {
         "crell/serde": "A full and robust serialization library. It can do much more advanced manipulation when reading in env vars if EnvMapper is insufficient for your needs."
