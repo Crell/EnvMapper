@@ -19,6 +19,9 @@ class SampleEnvironment
         // This is a numeric string, but should stay a string.
         public readonly string $zipCode,
         public readonly bool $bool,
+        // These should be mapped using ::from()
+        public readonly StringBackedEnum $stringBackedEnum,
+        public readonly IntegerBackedEnum $integerBackedEnum,
         // This is not defined in the environment, so the default value should be used.
         public readonly string $missing = 'default',
         // These are not defined in the environment, so the default falsy values should be used.

@@ -5,7 +5,6 @@ parameters:
         - tests
     excludePaths:
         - tests/Envs/*
-    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
 #        -
 #            message: '#type has no value type specified in iterable type array#'
