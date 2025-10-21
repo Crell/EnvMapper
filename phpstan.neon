@@ -1,19 +1,25 @@
 parameters:
     level: 9
+    tmpDir: build/phpstan
+    resultCachePath: %currentWorkingDirectory%/build/phpstan/resultCache.php
     paths:
         - src
         - tests
     excludePaths:
         - tests/Envs/*
     ignoreErrors:
-        -
-            message: '#type has no value type specified in iterable type array#'
-            path: tests/
-            reportUnmatched: false
-        -
-            message: '#type has no value type specified in iterable type iterable#'
-            path: tests/
-            reportUnmatched: false
+        # We don't need to be pedantic about iterable types in tests.
+        - identifier:  missingType.iterableValue
+          paths:
+            - tests/*
+          reportUnmatched: false
+
+        # PHPStan doesn't understand PHPUnit's self-termination methods.
+        - identifier: deadCode.unreachable
+          paths:
+            - tests/*
+          reportUnmatched: false
+
         # PHPStan is overly aggressive on readonly properties.
         -
             identifier: property.uninitializedReadonly
